@@ -1,12 +1,12 @@
 ﻿using MassTransit;
-using Projeli.Shared.Infrastructure.Messaging.Events;
+using Projeli.Shared.Application.Messages.Files;
 using Projeli.StorageService.Application.Services.Interfaces;
 
 namespace Projeli.StorageService.Api.Consumers;
 
-public class FileDeleteConsumer(IFileService fileService) : IConsumer<FileDeleteEvent>
+public class FileDeleteConsumer(IFileService fileService) : IConsumer<FileDeleteMessage>
 {
-    public async Task Consume(ConsumeContext<FileDeleteEvent> context)
+    public async Task Consume(ConsumeContext<FileDeleteMessage> context)
     {
         var message = context.Message;
         await fileService.DeleteFile(message.FilePath);

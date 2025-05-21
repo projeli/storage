@@ -1,14 +1,13 @@
-﻿using System.Text.Json;
-using MassTransit;
-using Projeli.Shared.Infrastructure.Messaging.Events;
+﻿using MassTransit;
+using Projeli.Shared.Application.Messages.Files;
 using Projeli.StorageService.Application.Services.Interfaces;
 using File = Projeli.StorageService.Domain.Models.File;
 
 namespace Projeli.StorageService.Api.Consumers;
 
-public class FileStoreConsumer(IFileService fileService, IBus bus) : IConsumer<FileStoreEvent>
+public class FileStoreConsumer(IFileService fileService, IBus bus) : IConsumer<FileStoreMessage>
 {
-    public async Task Consume(ConsumeContext<FileStoreEvent> context)
+    public async Task Consume(ConsumeContext<FileStoreMessage> context)
     {
         var message = context.Message;
         var file = new File
@@ -25,7 +24,7 @@ public class FileStoreConsumer(IFileService fileService, IBus bus) : IConsumer<F
 
         if (result is { Success: true, Data: not null })
         {
-            await bus.Publish(new FileStoredEvent
+            await bus.Publish(new FileStoredMessage
             {
                 FilePath = result.Data,
                 FileType = message.FileType,
@@ -35,7 +34,7 @@ public class FileStoreConsumer(IFileService fileService, IBus bus) : IConsumer<F
         }
         else
         {
-            await bus.Publish(new FileStoreFailedEvent
+            await bus.Publish(new FileStoreFailedMessage
             {
                 FileName = message.FileName,
                 FileExtension = message.FileExtension,

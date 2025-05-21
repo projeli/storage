@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using MassTransit;
+using Projeli.Shared.Application.Messages.Files;
 using Projeli.Shared.Infrastructure.Exceptions;
-using Projeli.Shared.Infrastructure.Messaging.Events;
 using Projeli.StorageService.Api.Consumers;
 
 namespace Projeli.StorageService.Api.Extensions;
@@ -33,8 +33,8 @@ public static class RabbitMqExtension
                     e.ConfigureConsumer<FileDeleteConsumer>(context);
                 });
                 
-                config.PublishFanOut<FileStoreFailedEvent>();
-                config.PublishFanOut<FileStoredEvent>();
+                config.PublishFanOut<FileStoreFailedMessage>();
+                config.PublishFanOut<FileStoredMessage>();
             });
         });
     }
